@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Student Money Tracker | MoneyMate</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<aside class="sidebar">
+  <a class="sidebar-brand" href="#top"><span class="sidebar-logo">₹</span><span>Student<br>Money Tracker</span></a>
+  <nav class="sidebar-nav" aria-label="Main navigation">
+    <a class="active" href="#top"><span>⌂</span> Dashboard</a>
+    <a href="#addExpensePanel"><span>＋</span> Add Expense</a>
+    <a href="#friendPayments"><span>♧</span> Friends &amp; Payments</a>
+    <a href="#savingsSection"><span>◎</span> Savings</a>
+    <a href="#summarySection"><span>▥</span> Reports</a>
+    <a href="#top"><span>⚙</span> Settings</a>
+  </nav>
+  <div class="sidebar-note"><span>◎</span><strong>Small steps,<br>big goals.</strong><p>Track today.<br>Build better habits.</p></div>
+</aside>
+
+<header class="topbar" id="top">
+
+    <div class="brand">
+
+        <div class="brand-icon">₹</div>
+
+        <div>
+            <h1>Student Money Tracker</h1>
+            <p>Track your money. Build better habits.</p>
+        </div>
+
+    </div>
+
+    <div class="month-picker">
+
+        <button id="previousMonth">‹</button>
+
+        <select id="monthSelect"></select>
+
+        <button id="nextMonth">›</button>
+
+    </div>
+
+</header>
+
+
+<main class="container">
+
+<section class="welcome">
+
+    <h2 id="welcomeText">Your money overview</h2>
+
+    <p>Keep track of your spending and stay on top of your money.</p>
+
+    <p class="carry-forward" id="carryForward">
+        Previous Month Balance: ₹0
+    </p>
+
+</section>
+
+
+<!-- SUMMARY CARDS -->
+
+<section class="summary-grid">
+
+    <div class="summary-card">
+        <div class="card-icon">₹</div>
+        <div class="card-label">Total Available</div>
+        <div class="card-value" id="dashboardAllowance">₹0</div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon">↘</div>
+        <div class="card-label">Total Spent</div>
+        <div class="card-value" id="totalSpent">₹0</div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon">◉</div>
+        <div class="card-label">Money Left</div>
+        <div class="card-value" id="moneyLeft">₹0</div>
+    </div>
+
+    <div class="summary-card">
+        <div class="card-icon">👯</div>
+        <div class="card-label">Friends Owe You</div>
+        <div class="card-value" id="friendsOwe">₹0</div>
+    </div>
+    <div class="summary-card owe-others-card">
+        <div class="card-icon">↗</div>
+        <div class="card-label">You Owe Friends</div>
+        <div class="card-value" id="youOweFriends">₹0</div>
+    </div>
+
+</section>
+
+<!-- SPENDING OVERVIEW -->
+<section class="panel spending-overview-panel" id="spendingOverview">
+  <div class="panel-title overview-heading">
+    <div><h3>Spending Overview</h3><p>Where your money goes this month</p></div>
+    <span class="overview-month" id="overviewMonth">This month</span>
+  </div>
+  <div class="overview-content">
+    <div class="donut-wrap"><div class="spending-donut" id="spendingDonut"><div class="donut-center"><strong id="donutTotal">₹0</strong><span>Total Spent</span></div></div></div>
+    <div class="spending-legend" id="spendingLegend"><div class="empty">Add expenses to see your spending overview.</div></div>
+  </div>
+</section>
+
+<!-- RECENT EXPENSES -->
+<section class="panel recent-expenses-panel" id="recentExpensesSection">
+  <div class="panel-title"><h3>Recent Expenses</h3><a class="view-all-link" href="#expensesSection">View all</a></div>
+  <div class="recent-table-wrap"><table class="recent-table"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Amount</th><th></th></tr></thead><tbody id="recentExpensesBody"><tr><td colspan="5" class="empty-cell">No expenses yet.</td></tr></tbody></table></div>
+</section>
+
+<!-- MAIN -->
+
+<section class="main-grid">
+
+    <!-- MONEY -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+            <h3>💰 Money Received</h3>
+            <span>This month</span>
+        </div>
+
+        <div class="form-group">
+
+            <label>Monthly Allowance</label>
+
+            <input
+                type="number"
+                id="allowance"
+                placeholder="Example: 5000"
+                min="0"
+            >
+
+        </div>
+
+        <button class="btn btn-primary full" id="allowanceButton">
+            Save Allowance
+        </button>
+
+        <br><br>
+
+        <div class="form-group">
+
+            <label>Extra Money</label>
+
+            <input
+                type="number"
+                id="extraMoney"
+                placeholder="Money received later"
+                min="0"
+            >
+
+        </div>
+
+        <button class="btn btn-light full" id="addMoneyButton">
+            + Add Extra Money
+        </button>
+
+        <div class="status-message" id="moneyStatus"></div>
+
+    </div>
+
+
+    <!-- EXPENSE -->
+
+    <div class="panel" id="addExpensePanel">
+
+        <div class="panel-title">
+
+            <h3>Add Expense</h3>
+
+            <span>Record your spending</span>
+
+        </div>
+
+        <div class="form-group">
+
+            <label>Expense Name</label>
+
+            <input
+                type="text"
+                id="expenseName"
+                placeholder="Example: Lunch"
+            >
+
+        </div>
+
+        <div class="form-row">
+
+            <div class="form-group">
+
+                <label>Amount</label>
+
+                <input
+                    type="number"
+                    id="expenseAmount"
+                    placeholder="₹"
+                    min="0"
+                    step="0.01"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>Category</label>
+
+                <select id="expenseCategory">
+
+                    <option value="Food">🍔 Food</option>
+                    <option value="Transport">🚌 Transport</option>
+                    <option value="Shopping">🛍️ Shopping</option>
+                    <option value="College">📚 College</option>
+                    <option value="Entertainment">🎬 Entertainment</option>
+                    <option value="Technology">💻 Technology</option>
+                    <option value="Personal">✨ Personal</option>
+                    <option value="Other">📦 Other</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <label style="
+            display:block;
+            font-size:12px;
+            color:#816e9a;
+            font-weight:600;
+            margin-bottom:6px;
+        ">
+            Friends sharing this expense
+        </label>
+
+
+        <div class="friend-input-row">
+
+            <input
+                type="text"
+                id="friendName"
+                placeholder="Friend name"
+            >
+
+            <button id="addFriendButton">+</button>
+
+        </div>
+
+
+        <div class="friend-list" id="friendInputList"></div>
+
+
+        <p class="helper-text">
+            Add every friend who shares THIS expense. They will be tracked separately.
+        </p>
+
+        <br>
+
+        <button class="btn btn-primary full" id="expenseButton">
+            + Add Expense
+        </button>
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            <h3>⚡ Quick Actions</h3>
+
+            <span>Tools</span>
+
+        </div>
+
+
+        <div class="quick-actions">
+
+            <button id="exportButton">📥 Export CSV</button>
+
+            <button id="scrollExpenses">🧾 My Expenses</button>
+
+            <button id="scrollSummary">📊 Summary</button>
+
+            <button id="scrollSavings">Savings</button>
+
+        </div>
+
+
+        <div class="savings-box" id="savingsSection">
+
+            <div class="savings-top">
+
+                <span>Savings Amount</span>
+
+                <span id="savingsStatus">Not set</span>
+
+            </div>
+
+
+            <input
+                type="number"
+                id="savingsAmount"
+                placeholder="Example: 500"
+                min="0"
+                step="0.01"
+            >
+
+
+            <br><br>
+
+
+            <button class="btn btn-light full" id="savingsButton">
+                Save Savings Amount
+            </button>
+
+
+            <p class="savings-info" id="savingsInfo">
+                Set an amount you want to save from your remaining balance.
+            </p>
+
+
+            <div class="savings-result" id="savingsResult">
+                Savings: ₹0 · Carry Forward: ₹0
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="balance-warning" id="balanceWarning"></div>
+
+<div class="balance-good" id="balanceGood"></div>
+
+
+<!-- SEARCH -->
+
+<section class="panel search-section" id="expensesSection">
+
+    <div class="panel-title">
+
+        <h3>🔎 Find an Expense</h3>
+
+        <span>Search & filter</span>
+
+    </div>
+
+
+    <div class="search-grid">
+
+        <input
+            type="text"
+            id="searchExpense"
+            placeholder="Search by expense name..."
+        >
+
+        <select id="filterCategory">
+
+            <option value="All">All Categories</option>
+            <option value="Food">🍔 Food</option>
+            <option value="Transport">🚌 Transport</option>
+            <option value="Shopping">🛍️ Shopping</option>
+            <option value="College">📚 College</option>
+            <option value="Entertainment">🎬 Entertainment</option>
+            <option value="Technology">💻 Technology</option>
+            <option value="Personal">✨ Personal</option>
+            <option value="Other">📦 Other</option>
+
+        </select>
+
+    </div>
+
+</section>
+
+
+<!-- EXPENSES + FRIENDS -->
+
+<section class="main-grid">
+
+    <div class="panel" style="grid-column:span 2;">
+
+        <div class="panel-title">
+
+            <h3>🧾 My Expenses</h3>
+
+            <span id="expenseCount">0 expenses</span>
+
+        </div>
+
+        <div class="expense-list" id="expenseList"></div>
+
+    </div>
+
+
+    <div class="panel" id="friendPayments">
+
+        <div class="panel-title">
+
+            <h3>Friend Payments</h3>
+
+            <span>Paid / Pending</span>
+
+        </div>
+
+        <div class="friend-payment-list" id="friendPaymentList"></div>
+
+    </div>
+
+    <div class="panel" id="youOwePanel">
+        <div class="panel-title">
+            <h3>💳 You Owe Friends</h3>
+            <span>Track what you need to pay</span>
+        </div>
+        <div class="form-group">
+            <label>Friend's name</label>
+            <input type="text" id="oweFriendName" placeholder="e.g. Priya">
+        </div>
+        <div class="form-row">
+            <div class="form-group">
+                <label>Amount (₹)</label>
+                <input type="number" id="oweFriendAmount" min="0.01" step="0.01" placeholder="e.g. 150">
+            </div>
+            <div class="form-group">
+                <label>Reason</label>
+                <input type="text" id="oweFriendReason" placeholder="e.g. Dinner">
+            </div>
+        </div>
+        <button class="btn btn-primary full" id="addOwedToFriendButton">＋ Add amount I owe</button>
+        <p class="status-message" id="oweFriendStatus"></p>
+        <div class="you-owe-list" id="youOweList"></div>
+    </div>
+
+</section>
+
+
+<!-- LOWER -->
+
+<section class="lower-grid">
+
+
+    <div class="panel">
+
+        <div class="panel-title">
+
+            <h3>📊 Spending by Category</h3>
+
+            <span id="categoryTotal">₹0</span>
+
+        </div>
+
+        <div id="categoryChart"></div>
+
+    </div>
+
+
+    <section class="panel" id="summarySection">
+
+        <div class="panel-title">
+
+            <h3>📋 Monthly Summary</h3>
+
+            <span id="summaryMonth"></span>
+
+        </div>
+
+
+        <div class="summary-list">
+
+            <div class="summary-row">
+                <span>Monthly Allowance</span>
+                <span id="summaryAllowance">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Extra Money</span>
+                <span id="summaryExtra">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Previous Balance</span>
+                <span id="summaryCarry">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Total Available</span>
+                <span id="summaryAvailable">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Total Spent</span>
+                <span id="summarySpent">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Savings Amount</span>
+                <span id="summarySavings">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Carry Forward</span>
+                <span id="summaryCarryForward">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Friends Owe You</span>
+                <span id="summaryFriendsOwe">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Money Recovered</span>
+                <span id="summaryRecovered">₹0</span>
+            </div>
+
+            <div class="summary-row">
+                <span>Number of Expenses</span>
+                <span id="summaryExpenseCount">0</span>
+            </div>
+
+        </div>
+
+    </section>
+
+</section>
+
+
+<div class="footer-actions">
+
+    <button class="btn btn-light" id="clearExpensesButton">
+        🗑️ Clear This Month
+    </button>
+
+    <button class="btn btn-primary" id="exportButtonBottom">
+        📥 Export This Month
+    </button>
+
+</div>
+
+
+</main>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
